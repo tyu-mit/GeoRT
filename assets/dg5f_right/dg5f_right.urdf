@@ -21,9 +21,15 @@
         <mesh filename="meshes/visual/rl_dg_mount.dae"/>
       </geometry>
     </visual>
-    <collision>
+    <!-- <collision>
       <geometry>
         <mesh filename="meshes/collision/rl_dg_mount_c.STL"/>
+      </geometry>
+    </collision> -->
+    <collision>
+      <origin xyz="0 0.0 0.006"/>
+      <geometry>
+        <box size="0.062 0.06195 0.012"/>
       </geometry>
     </collision>
   </link>
@@ -40,10 +46,16 @@
         <mesh filename="meshes/visual/rl_dg_base.dae" />
       </geometry>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
         <mesh filename="meshes/collision/rl_dg_base_c.STL" />
+      </geometry>
+    </collision> -->
+    <collision>
+      <origin xyz="0 -0.000250000506639481 0.04601536691188812"/>
+      <geometry>
+        <box size="0.0700 0.0705 0.0920307"/>
       </geometry>
     </collision>
   </link>
@@ -65,10 +77,16 @@
         <mesh filename="meshes/visual/rl_dg_palm.dae" />
       </geometry>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
         <mesh filename="meshes/collision/rl_dg_palm_c.STL" />
+      </geometry>
+    </collision> -->
+    <collision>
+      <origin xyz="-0.004554461687803272 0.001759164035320282 0.049549996852874735"/>
+      <geometry>
+        <box size="0.06403926014900208 0.08234254270792007 0.09909999370574955"/>
       </geometry>
     </collision>
   </link>
@@ -90,10 +108,16 @@
         <mesh filename="meshes/visual/rl_dg_1_1.dae" />
       </geometry>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
         <mesh filename="meshes/collision/rl_dg_1_1_c.STL" />
+      </geometry>
+    </collision> -->
+    <collision>
+      <origin xyz="0.0201 0.0 0.00315"/>
+      <geometry>
+        <box size="0.0626 0.0190 0.0287"/>
       </geometry>
     </collision>
   </link>
@@ -117,10 +141,16 @@
         <mesh filename="meshes/visual/rl_dg_1_2.dae" />
       </geometry>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
         <mesh filename="meshes/collision/rl_dg_1_2_c.STL" />
+      </geometry>
+    </collision> -->
+    <collision>
+      <origin xyz="0.0 0.015499998582527045 0.0"/>
+      <geometry>
+        <box size="0.0224 0.044 0.0224"/>
       </geometry>
     </collision>
   </link>
@@ -144,10 +174,16 @@
         <mesh filename="meshes/visual/rl_dg_1_3.dae" />
       </geometry>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
         <mesh filename="meshes/collision/rl_dg_1_3_c.STL" />
+      </geometry>
+    </collision> -->
+    <collision>
+      <origin xyz="0.0 0.017881948966532946 0.0"/>
+      <geometry>
+        <box size="0.0224 0.0547639 0.0190"/>
       </geometry>
     </collision>
   </link>
@@ -174,7 +210,7 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="meshes/collision/rl_dg_1_4_c.STL" />
+        <mesh filename="meshes/collision/rl_dg_1_4_c.obj" />
       </geometry>
     </collision>
   </link>
@@ -201,7 +237,7 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="meshes/collision/rl_dg_1_tip_c.STL" />
+        <mesh filename="meshes/collision/rl_dg_1_tip_c.obj" />
       </geometry>
     </collision>
   </link>
@@ -223,10 +259,16 @@
         <mesh filename="meshes/visual/rl_dg_2_1.dae" />
       </geometry>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
         <mesh filename="meshes/collision/rl_dg_2_1_c.STL" />
+      </geometry>
+    </collision> -->
+    <collision>
+      <origin xyz="0.005775416735559701 0.0007500001229345796 0.016890135826542974"/>
+      <geometry>
+        <box size="0.042749165557324886 0.0239 0.046708067413419485"/>
       </geometry>
     </collision>
   </link>
@@ -250,10 +292,16 @@
         <mesh filename="meshes/visual/rl_dg_2_2.dae" />
       </geometry>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
         <mesh filename="meshes/collision/rl_dg_2_2_c.STL" />
+      </geometry>
+    </collision> -->
+    <collision>
+      <origin xyz="0.0 0.0 0.02091805031523108"/>
+      <geometry>
+        <box size="0.0190 0.0224 0.0547639"/>
       </geometry>
     </collision>
   </link>
@@ -277,10 +325,16 @@
         <mesh filename="meshes/visual/rl_dg_2_3.dae" />
       </geometry>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
         <mesh filename="meshes/collision/rl_dg_2_3_c.STL" />
+      </geometry>
+    </collision> -->
+    <collision>
+      <origin xyz="0.0 0.0 0.02091805031523108"/>
+      <geometry>
+        <box size="0.0190 0.0224 0.0547639"/>
       </geometry>
     </collision>
   </link>
@@ -307,7 +361,7 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="meshes/collision/rl_dg_2_4_c.STL" />
+        <mesh filename="meshes/collision/rl_dg_2_4_c.obj" />
       </geometry>
     </collision>
   </link>
@@ -334,7 +388,7 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="meshes/collision/rl_dg_2_tip_c.STL" />
+        <mesh filename="meshes/collision/rl_dg_2_tip_c.obj" />
       </geometry>
     </collision>
   </link>
@@ -356,10 +410,16 @@
         <mesh filename="meshes/visual/rl_dg_3_1.dae" />
       </geometry>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
         <mesh filename="meshes/collision/rl_dg_3_1_c.STL" />
+      </geometry>
+    </collision> -->
+    <collision>
+      <origin xyz="0.005784806329756976 0 0.016855540918186307"/>
+      <geometry>
+        <box size="0.04273 0.0224 0.0466"/>
       </geometry>
     </collision>
   </link>
@@ -383,10 +443,16 @@
         <mesh filename="meshes/visual/rl_dg_3_2.dae" />
       </geometry>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
         <mesh filename="meshes/collision/rl_dg_3_2_c.STL" />
+      </geometry>
+    </collision> -->
+    <collision>
+      <origin xyz="0.0 0 0.0209180"/>
+      <geometry>
+        <box size="0.0190 0.0224 0.0547639"/>
       </geometry>
     </collision>
   </link>
@@ -410,10 +476,16 @@
         <mesh filename="meshes/visual/rl_dg_3_3.dae" />
       </geometry>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
         <mesh filename="meshes/collision/rl_dg_3_3_c.STL" />
+      </geometry>
+    </collision> -->
+    <collision>
+      <origin xyz="0.0 0.0 0.02091805031523108"/>
+      <geometry>
+        <box size="0.0190 0.0224 0.0547639"/>
       </geometry>
     </collision>
   </link>
@@ -440,7 +512,7 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="meshes/collision/rl_dg_3_4_c.STL" />
+        <mesh filename="meshes/collision/rl_dg_3_4_c.obj" />
       </geometry>
     </collision>
   </link>
@@ -467,7 +539,7 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="meshes/collision/rl_dg_3_tip_c.STL" />
+        <mesh filename="meshes/collision/rl_dg_3_tip_c.obj" />
       </geometry>
     </collision>
   </link>
@@ -489,10 +561,16 @@
         <mesh filename="meshes/visual/rl_dg_4_1.dae" />
       </geometry>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
         <mesh filename="meshes/collision/rl_dg_4_1_c.STL" />
+      </geometry>
+    </collision> -->
+    <collision>
+      <origin xyz="0.005774947348982096 0.0 0.016890135826542974"/>
+      <geometry>
+        <box size="0.04275 0.0239 0.0467"/>
       </geometry>
     </collision>
   </link>
@@ -516,10 +594,16 @@
         <mesh filename="meshes/visual/rl_dg_4_2.dae" />
       </geometry>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
         <mesh filename="meshes/collision/rl_dg_4_2_c.STL" />
+      </geometry>
+    </collision> -->
+    <collision>
+      <origin xyz="0.0 0 0.0209180"/>
+      <geometry>
+        <box size="0.0190 0.0224 0.0547639"/>
       </geometry>
     </collision>
   </link>
@@ -543,10 +627,16 @@
         <mesh filename="meshes/visual/rl_dg_4_3.dae" />
       </geometry>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
         <mesh filename="meshes/collision/rl_dg_4_3_c.STL" />
+      </geometry>
+    </collision> -->
+    <collision>
+      <origin xyz="0.0 0 0.02091805031523108"/>
+      <geometry>
+        <box size="0.0190 0.0224 0.0547639"/>
       </geometry>
     </collision>
   </link>
@@ -573,9 +663,9 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="meshes/collision/rl_dg_4_4_c.STL" />
+        <mesh filename="meshes/collision/rl_dg_4_4_c.obj" />
       </geometry>
-    </collision>
+    </collision>  
   </link>
   <joint name="rj_dg_4_4" type="revolute">
     <origin xyz="0.0 0.0 0.0388" rpy="0.0 0.0 0.0" />
@@ -600,7 +690,7 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="meshes/collision/rl_dg_4_tip_c.STL" />
+        <mesh filename="meshes/collision/rl_dg_4_tip_c.obj" />
       </geometry>
     </collision>
   </link>
@@ -622,10 +712,16 @@
         <mesh filename="meshes/visual/rl_dg_5_1.dae" />
       </geometry>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
         <mesh filename="meshes/collision/rl_dg_5_1_c.STL" />
+      </geometry>
+    </collision> -->
+    <collision>
+      <origin xyz="-0.006020140834152699 -0.016772046219557527 0.01752960262820125"/>
+      <geometry>
+        <box size="0.03444028086960316 0.04645590577274561 0.060140796937048435"/>
       </geometry>
     </collision>
   </link>
@@ -649,10 +745,16 @@
         <mesh filename="meshes/visual/rl_dg_5_2.dae" />
       </geometry>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
         <mesh filename="meshes/collision/rl_dg_5_2_c.STL" />
+      </geometry>
+    </collision> -->
+    <collision>
+      <origin xyz="0.0 0.0 0.015499998582527045"/>
+      <geometry>
+        <box size="0.0224 0.0224 0.0440"/>
       </geometry>
     </collision>
   </link>
@@ -676,10 +778,16 @@
         <mesh filename="meshes/visual/rl_dg_5_3.dae" />
       </geometry>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
         <mesh filename="meshes/collision/rl_dg_5_3_c.STL" />
+      </geometry>
+    </collision> -->
+    <collision>
+      <origin xyz="0.0 0.0 0.017881949"/>
+      <geometry>
+        <box size="0.0190 0.0224 0.0547639"/>
       </geometry>
     </collision>
   </link>
@@ -706,7 +814,7 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="meshes/collision/rl_dg_5_4_c.STL" />
+        <mesh filename="meshes/collision/rl_dg_5_4_c.obj" />
       </geometry>
     </collision>
   </link>
@@ -733,7 +841,7 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh filename="meshes/collision/rl_dg_5_tip_c.STL" />
+        <mesh filename="meshes/collision/rl_dg_5_tip_c.obj" />
       </geometry>
     </collision>
   </link>
