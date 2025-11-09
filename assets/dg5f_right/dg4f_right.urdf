@@ -465,7 +465,7 @@
     <parent link="rl_dg_3_1" />
     <child link="rl_dg_3_2" />
     <axis xyz="0 1 0" />
-    <limit lower="0.0" upper="1.9547687622336491" effort="7.5" velocity="3.141592653589793"/>
+    <limit lower="-0.1" upper="1.9547687622336491" effort="7.5" velocity="3.141592653589793"/>
   </joint>
 
   <link name="rl_dg_3_3">
@@ -733,12 +733,10 @@
       </geometry>
     </collision>
   </link>
-  <joint name="rj_dg_5_1" type="revolute">
+  <joint name="rj_dg_5_1" type="fixed">
     <origin xyz="0.0103 -0.0195 0.0182" rpy="0.0 0.0 0.0" />
     <parent link="rl_dg_palm" />
     <child link="rl_dg_5_1" />
-    <axis xyz="0 0 1" />
-    <limit lower="-0.017453292519943295" upper="1.0471975511965976" effort="7.5" velocity="3.141592653589793"/>
   </joint>
 
   <link name="rl_dg_5_2">
@@ -766,12 +764,10 @@
       </geometry>
     </collision>
   </link>
-  <joint name="rj_dg_5_2" type="revolute">
+  <joint name="rj_dg_5_2" type="fixed">
     <origin xyz="0.0 -0.028 0.0381" rpy="0.0 0.0 0.0" />
     <parent link="rl_dg_5_1" />
     <child link="rl_dg_5_2" />
-    <axis xyz="1 0 0" />
-    <limit lower="-0.4188790204786391" upper="0.6108652381980153" effort="7.5" velocity="3.141592653589793"/>
   </joint>
 
   <link name="rl_dg_5_3">
@@ -799,13 +795,10 @@
       </geometry>
     </collision>
   </link>
-  <joint name="rj_dg_5_3" type="revolute">
+  <joint name="rj_dg_5_3" type="fixed">
     <origin xyz="0.0 0.0 0.031" rpy="0.0 0.0 0.0" />
     <parent link="rl_dg_5_2" />
     <child link="rl_dg_5_3" />
-    <axis xyz="0 1 0" />
-    <!-- <limit lower="-1.5707963267948966" upper="1.5707963267948966" effort="7.5" velocity="3.141592653589793"/> -->
-    <limit lower="-0.1" upper="1.5707963267948966" effort="7.5" velocity="3.141592653589793"/>
   </joint>
 
   <link name="rl_dg_5_4">
@@ -827,13 +820,10 @@
       </geometry>
     </collision>
   </link>
-  <joint name="rj_dg_5_4" type="revolute">
+  <joint name="rj_dg_5_4" type="fixed">
     <origin xyz="0.0 0.0 0.0388" rpy="0.0 0.0 0.0" />
     <parent link="rl_dg_5_3" />
     <child link="rl_dg_5_4" />
-    <axis xyz="0 1 0" />
-    <!-- <limit lower="-1.5707963267948966" upper="1.5707963267948966" effort="7.5" velocity="3.141592653589793"/> -->
-    <limit lower="-0.1" upper="1.5707963267948966" effort="7.5" velocity="3.141592653589793"/>
   </joint>
 
   <link name="rl_dg_5_tip">

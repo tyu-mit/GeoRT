@@ -2,7 +2,7 @@
 
 # Ignore checkpoint files except for the base FK model
 checkpoint/*
-!checkpoint/fk_model_allegro_right.pth
+!checkpoint/fk_model_*.pth
 
 # Python
 __pycache__/

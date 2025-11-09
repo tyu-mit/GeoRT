@@ -67,8 +67,8 @@ def load_mesh_from_urdf(mesh_path, urdf_dir):
     return None
 
 
-def create_fingertip_visualization(config_path, hand_name):
-    """Create HTML visualization of fingertips with offset markers."""
+def create_fingertip_visualization(config_path, hand_name, compare_config_path=None):
+    """Create 3D visualization of fingertips with offset markers."""
     
     # Load config
     if config_path:
@@ -76,6 +76,12 @@ def create_fingertip_visualization(config_path, hand_name):
             config = json.load(f)
     else:
         config = get_config(hand_name)
+    
+    # Load comparison config if provided
+    compare_config = None
+    if compare_config_path:
+        with open(compare_config_path, 'r') as f:
+            compare_config = json.load(f)
     
     urdf_path = config['urdf_path']
     urdf_dir = Path(urdf_path).parent
@@ -128,12 +134,55 @@ def create_fingertip_visualization(config_path, hand_name):
                 # Add mesh to scene
                 scene.add_geometry(mesh, node_name=f"{finger_name}_mesh")
                 
-                # Create marker sphere at offset position
+                # Create marker sphere at CURRENT offset position (solid sphere)
                 marker_pos = offset + finger_offset
                 marker = trimesh.creation.icosphere(subdivisions=2, radius=0.003)
                 marker.apply_translation(marker_pos)
                 marker.visual.face_colors = colors[i]
-                scene.add_geometry(marker, node_name=f"{finger_name}_marker")
+                scene.add_geometry(marker, node_name=f"{finger_name}_current_marker")
+                
+                # If compare config provided, add comparison offset marker
+                if compare_config:
+                    # Find matching finger in compare config
+                    compare_offset = None
+                    for compare_finger in compare_config['fingertip_link']:
+                        if compare_finger['name'] == finger_name:
+                            compare_offset = np.array(compare_finger['center_offset'])
+                            break
+                    
+                    if compare_offset is not None:
+                        # Create SUGGESTED offset marker (wireframe cube for distinction)
+                        compare_pos = compare_offset + finger_offset
+                        compare_marker = trimesh.creation.box(extents=[0.006, 0.006, 0.006])
+                        compare_marker.apply_translation(compare_pos)
+                        compare_marker.visual.face_colors = colors[i]
+                        scene.add_geometry(compare_marker, node_name=f"{finger_name}_suggested_marker")
+                        
+                        # Draw line between current and suggested using a thin cylinder
+                        line_dir = compare_pos - marker_pos
+                        line_length = np.linalg.norm(line_dir)
+                        if line_length > 0:
+                            line_center = (marker_pos + compare_pos) / 2
+                            line_cylinder = trimesh.creation.cylinder(radius=0.0005, height=line_length)
+                            
+                            # Align cylinder with the line direction
+                            z_axis = np.array([0, 0, 1])
+                            line_axis = line_dir / line_length
+                            rotation_axis = np.cross(z_axis, line_axis)
+                            if np.linalg.norm(rotation_axis) > 1e-6:
+                                rotation_axis = rotation_axis / np.linalg.norm(rotation_axis)
+                                angle = np.arccos(np.clip(np.dot(z_axis, line_axis), -1, 1))
+                                rotation_matrix = trimesh.transformations.rotation_matrix(angle, rotation_axis)
+                                line_cylinder.apply_transform(rotation_matrix)
+                            
+                            line_cylinder.apply_translation(line_center)
+                            line_cylinder.visual.face_colors = [128, 128, 128, 255]  # Gray
+                            scene.add_geometry(line_cylinder, node_name=f"{finger_name}_line")
+                        
+                        diff = np.linalg.norm(compare_offset - offset)
+                        print(f"  Current (sphere):   [{offset[0]:7.4f}, {offset[1]:7.4f}, {offset[2]:7.4f}]")
+                        print(f"  Suggested (cube):   [{compare_offset[0]:7.4f}, {compare_offset[1]:7.4f}, {compare_offset[2]:7.4f}]")
+                        print(f"  Distance: {diff*1000:.2f} mm")
                 
                 # Add coordinate frame at mesh origin
                 axis = trimesh.creation.axis(origin_size=0.002, transform=None)
@@ -157,96 +206,37 @@ def main():
                         help='Hand configuration name')
     parser.add_argument('--config', type=str, default=None,
                         help='Path to specific config file (optional)')
+    parser.add_argument('--compare-config', type=str, default=None,
+                        help='Path to config file with offsets to compare against')
     parser.add_argument('--output', type=str, default=None,
-                        help='Output HTML file path (default: fingertip_viz_{hand}.html)')
+                        help='Output GLB file path (default: fingertip_viz_{hand}.glb)')
     parser.add_argument('--show', action='store_true',
                         help='Open visualization in browser immediately')
     
     args = parser.parse_args()
     
     # Create visualization
-    scene = create_fingertip_visualization(args.config, args.hand)
+    scene = create_fingertip_visualization(args.config, args.hand, compare_config_path=args.compare_config)
     
     # Determine output path
     if args.output:
-        output_path = args.output
+        glb_path = args.output
     else:
         config_suffix = Path(args.config).stem if args.config else args.hand
-        output_path = f"fingertip_viz_{config_suffix}.html"
+        glb_path = f"fingertip_viz_{config_suffix}.glb"
     
-    # Try different export methods
+    # Export as GLB only
     try:
-        # Method 1: Use scene.show in browser mode (three.js viewer)
-        scene.show()
-    except:
-        pass
-    
-    # Method 2: Export to HTML using trimesh's export
-    try:
-        # Export as GLB (binary glTF)
-        glb_path = output_path.replace('.html', '.glb')
         scene.export(glb_path)
         
-        # Create simple HTML viewer
-        html_template = """<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>Fingertip Offset Visualization</title>
-    <style>
-        body { margin: 0; padding: 20px; font-family: Arial, sans-serif; }
-        #info { 
-            position: absolute; 
-            top: 10px; 
-            left: 10px; 
-            background: rgba(255,255,255,0.9); 
-            padding: 15px; 
-            border-radius: 5px;
-            max-width: 300px;
-        }
-        h2 { margin-top: 0; }
-        ul { padding-left: 20px; }
-    </style>
-    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-</head>
-<body>
-    <div id="info">
-        <h2>Fingertip Offset Visualization</h2>
-        <p><strong>Colors:</strong></p>
-        <ul>
-            <li style="color: red;">Red = Index finger</li>
-            <li style="color: green;">Green = Middle finger</li>
-            <li style="color: blue;">Blue = Ring finger</li>
-            <li style="color: #cccc00;">Yellow = Pinky finger</li>
-            <li style="color: magenta;">Magenta = Thumb</li>
-        </ul>
-        <p>Colored spheres show offset marker positions.<br>
-        RGB axes show link coordinate frames.<br>
-        Drag to rotate, scroll to zoom.</p>
-    </div>
-    <model-viewer 
-        src="{glb_file}" 
-        alt="Fingertip visualization" 
-        camera-controls 
-        auto-rotate
-        style="width: 100%; height: 100vh;">
-    </model-viewer>
-</body>
-</html>"""
-        
-        html_content = html_template.replace('{glb_file}', Path(glb_path).name)
-        
-        with open(output_path, 'w') as f:
-            f.write(html_content)
-        
         print("="*80)
-        print(f"\n✓ Visualization saved to:")
-        print(f"   HTML: {output_path}")
-        print(f"   Model: {glb_path}")
+        print(f"\n✓ Visualization saved to: {glb_path}")
         print("\nVisualization guide:")
-        print("  - Each finger is shown in a different color")
-        print("  - Colored spheres show the offset marker positions")
-        print("  - RGB axes show the link coordinate frame")
+        print("  - Each finger mesh is shown in a different color")
+        print("  - SPHERES = Current offset positions")
+        print("  - CUBES = Suggested offset positions (if --compare-config provided)")
+        print("  - Lines connect current to suggested positions")
+        print("  - RGB axes show the link coordinate frames")
         print("  - Fingers are spaced horizontally for clarity")
         print("\nColors:")
         print("  Red     = Index finger")
@@ -256,24 +246,8 @@ def main():
         print("  Magenta = Thumb")
         print()
         
-        if args.show:
-            import webbrowser
-            webbrowser.open(f'file://{Path(output_path).absolute()}')
-            print(f"Opening in browser...")
-        else:
-            print(f"To view, open: {output_path} in a web browser")
-        
-        print()
-        
     except Exception as e:
         print(f"\n✗ Error creating visualization: {e}")
-        print("\nTrying alternative export...")
-        
-        # Fallback: just save the GLB
-        glb_path = output_path.replace('.html', '.glb')
-        scene.export(glb_path)
-        print(f"✓ Model exported to: {glb_path}")
-        print("  You can view this with any 3D viewer or online GLB viewer")
         print()
 
 

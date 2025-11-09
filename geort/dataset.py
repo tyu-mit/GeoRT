@@ -70,5 +70,5 @@ class RobotKinematicsDataset:
         return np.array(all_keypoint_data)
 
 if __name__ == '__main__':
-    dataset = RobotJointKeypointDataset("../data/allegro_native.npz",["link_3.0_tip", "link_3.0_tip"])
+    dataset = RobotKinematicsDataset("../data/allegro_native.npz",["link_3.0_tip", "link_3.0_tip"])
     print(dataset[0])

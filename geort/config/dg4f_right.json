@@ -1,0 +1,90 @@
+{
+    "README!!": "Please see config/template.py for instructions. You can remove this in your config json",
+    "name": "dg4f_right",
+    "urdf_path": "./assets/dg5f_right/dg4f_right.urdf",
+    "base_link": "rl_dg_base",
+    "joint_order": [
+        "rj_dg_1_1",
+        "rj_dg_1_2",
+        "rj_dg_1_3",
+        "rj_dg_1_4",
+        "rj_dg_2_1",
+        "rj_dg_2_2",
+        "rj_dg_2_3",
+        "rj_dg_2_4",
+        "rj_dg_3_1",
+        "rj_dg_3_2",
+        "rj_dg_3_3",
+        "rj_dg_3_4",
+        "rj_dg_4_1",
+        "rj_dg_4_2",
+        "rj_dg_4_3",
+        "rj_dg_4_4"
+    ],
+    "fingertip_link": [
+        {
+            "name": "thumb",
+            "link": "rl_dg_1_tip",
+            "joint": [
+                "rj_dg_1_1",
+                "rj_dg_1_2",
+                "rj_dg_1_3",
+                "rj_dg_1_4"
+            ],
+            "center_offset": [
+                0.0,
+                0.01761109,
+                0.00282273
+            ],
+            "human_hand_id": 4
+        },
+        {
+            "name": "index",
+            "link": "rl_dg_2_tip",
+            "joint": [
+                "rj_dg_2_1",
+                "rj_dg_2_2",
+                "rj_dg_2_3",
+                "rj_dg_2_4"
+            ],
+            "center_offset": [
+                0.00282273,
+                0.0,
+                0.01761109
+            ],
+            "human_hand_id": 8
+        },
+        {
+            "name": "middle",
+            "link": "rl_dg_3_tip",
+            "joint": [
+                "rj_dg_3_1",
+                "rj_dg_3_2",
+                "rj_dg_3_3",
+                "rj_dg_3_4"
+            ],
+            "center_offset": [
+                0.00282273,
+                0.0,
+                0.01761109
+            ],
+            "human_hand_id": 12
+        },
+        {
+            "name": "ring",
+            "link": "rl_dg_4_tip",
+            "joint": [
+                "rj_dg_4_1",
+                "rj_dg_4_2",
+                "rj_dg_4_3",
+                "rj_dg_4_4"
+            ],
+            "center_offset": [
+                0.00282273,
+                0.0,
+                0.01761109
+            ],
+            "human_hand_id": 16
+        }
+    ]
+}

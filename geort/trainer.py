@@ -24,6 +24,25 @@ from tqdm import tqdm
 import os
 from pathlib import Path 
 import math
+import sys
+
+class TeeLogger:
+    """A logger that writes to both console and file."""
+    def __init__(self, log_file):
+        self.terminal = sys.stdout
+        self.log = open(log_file, 'a')
+    
+    def write(self, message):
+        self.terminal.write(message)
+        self.log.write(message)
+        self.log.flush()
+    
+    def flush(self):
+        self.terminal.flush()
+        self.log.flush()
+    
+    def close(self):
+        self.log.close()
 
 def merge_dict_list(dl):
     keys = dl[0].keys()
@@ -54,6 +73,8 @@ class GeoRTTrainer:
     def __init__(self, config):
         self.config = config
         self.hand = HandKinematicModel.build_from_config(self.config)
+        self.logger = None
+        self.original_stdout = None
 
     def get_robot_pointcloud(self, keypoint_names):
         '''
@@ -155,7 +176,7 @@ class GeoRTTrainer:
         os.makedirs("checkpoint", exist_ok=True)
         return f"checkpoint/fk_model_{name}.pth"
     
-    def get_robot_neural_fk_model(self, force_train=False):
+    def get_robot_neural_fk_model(self, force_train=False, n_fk_epoch=300):
         '''
             This function will return a forward kinematics model.
             If the fk model does not exist, this function will train one first.
@@ -180,10 +201,11 @@ class GeoRTTrainer:
         
             fk_dataset = self.get_robot_kinematics_dataset()
             fk_dataloader = DataLoader(fk_dataset, batch_size=256, shuffle=True)
-            fk_optim = optim.Adam(fk_model.parameters(), lr=5e-4)
+            fk_optim = optim.Adam(fk_model.parameters(), lr=1e-3)
+            lr_scheduler = optim.lr_scheduler.MultiStepLR(fk_optim, milestones=[20, 120, 240], gamma=0.5)
 
             criterion_fk = nn.MSELoss()
-            for epoch in range(200):
+            for epoch in range(n_fk_epoch):
                 all_fk_error = 0
                 for batch_idx, batch in enumerate(fk_dataloader):
                     keypoint = batch["keypoint"].cuda().float()
@@ -194,6 +216,7 @@ class GeoRTTrainer:
                     loss = criterion_fk(predicted_keypoint, keypoint)
                     loss.backward()
                     fk_optim.step()
+                    lr_scheduler.step()
 
                     all_fk_error += loss.item()
                 
@@ -210,7 +233,9 @@ class GeoRTTrainer:
             This is the main trainer.
         '''
 
-        fk_model = self.get_robot_neural_fk_model()
+        n_fk_epoch = kwargs.get("fk_epoch", 300)
+        fk_force_train = kwargs.get("fk_force_train", False)
+        fk_model = self.get_robot_neural_fk_model(force_train=fk_force_train, n_fk_epoch=n_fk_epoch)
         ik_model = IKModel(keypoint_joints=self.get_keypoint_info()["joint"]).cuda()
         os.makedirs("./checkpoint", exist_ok=True)
 
@@ -225,8 +250,7 @@ class GeoRTTrainer:
         w_curvature = kwargs.get("w_curvature", 0.1)
         w_collision = kwargs.get("w_collision", 0.0)
         w_pinch = kwargs.get("w_pinch", 1.0)
-
-
+        save_every = kwargs.get("save_every", 10)
 
         save_dir = f"./checkpoint/{hand_model_name}_{generate_current_timestring()}"
         if exp_tag != '':
@@ -235,6 +259,19 @@ class GeoRTTrainer:
 
         os.makedirs(save_dir, exist_ok=True)
         os.makedirs(last_save_dir, exist_ok=True)
+
+        # Setup logging to file
+        log_file = Path(save_dir) / "output.log"
+        self.original_stdout = sys.stdout
+        self.logger = TeeLogger(log_file)
+        sys.stdout = self.logger
+        
+        print(f"=== Training Started at {generate_current_timestring()} ===")
+        print(f"Checkpoint directory: {save_dir}")
+        print(f"Experiment tag: {exp_tag}")
+        print(f"Number of epochs: {n_epoch}")
+        print(f"Loss weights - Chamfer: {w_chamfer}, Curvature: {w_curvature}, Collision: {w_collision}, Pinch: {w_pinch}")
+        print()
 
         # Save the config including robot joint info to the checkpoint directory.
         joint_lower_limit, joint_upper_limit = self.hand.get_joint_limit()
@@ -348,15 +385,24 @@ class GeoRTTrainer:
                         f" - Pinch: {format_loss(pinch_loss.item())}"
                     )
 
+            if (epoch + 1) % save_every == 0:
+                # Saving the checkpoint.
+                torch.save(ik_model.state_dict(), Path(save_dir) / f"epoch_{epoch}.pth")
+                torch.save(ik_model.state_dict(), Path(save_dir) / f"last.pth")
 
-            # Saving the checkpoint.
-            torch.save(ik_model.state_dict(), Path(save_dir) / f"epoch_{epoch}.pth")
-            torch.save(ik_model.state_dict(), Path(save_dir) / f"last.pth")
+                # This is just for dev phase convenience and can be removed.
+                torch.save(ik_model.state_dict(), Path(last_save_dir) / f"epoch_{epoch}.pth")
+                torch.save(ik_model.state_dict(), Path(last_save_dir) / f"last.pth")
 
-            # This is just for dev phase convenience and can be removed.
-            torch.save(ik_model.state_dict(), Path(last_save_dir) / f"epoch_{epoch}.pth")
-            torch.save(ik_model.state_dict(), Path(last_save_dir) / f"last.pth")
-
+        print()
+        print(f"=== Training Completed at {generate_current_timestring()} ===")
+        
+        # Restore stdout and close logger
+        if self.logger is not None:
+            sys.stdout = self.original_stdout
+            self.logger.close()
+            self.logger = None
+        
         return 
 
 
@@ -366,7 +412,10 @@ if __name__ == '__main__':
     parser.add_argument('-hand', type=str, default='allegro')
     parser.add_argument('-human_data', type=str, default='human')
     parser.add_argument('-ckpt_tag', type=str, default='')
+    parser.add_argument('-fk_epoch', type=int, default=300)
+    parser.add_argument('-epoch', type=int, default=200)
 
+    parser.add_argument('--save_every', type=int, default=10)
     parser.add_argument('--w_chamfer', type=float, default=80.0)
     parser.add_argument('--w_curvature', type=float, default=0.1)
     parser.add_argument('--w_collision', type=float, default=0.0)
@@ -383,6 +432,8 @@ if __name__ == '__main__':
     trainer.train(
         human_data_path, 
         tag=args.ckpt_tag, 
+        epoch=args.epoch,
+        fk_epoch=args.fk_epoch,
         w_chamfer=args.w_chamfer, 
         w_curvature=args.w_curvature, 
         w_collision=args.w_collision,

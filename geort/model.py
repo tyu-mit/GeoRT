@@ -15,12 +15,18 @@ def get_finger_fk(n_joint=4, hidden=128):
         nn.Linear(hidden, hidden), 
         nn.LeakyReLU(), 
         nn.BatchNorm1d(hidden),
+        nn.Linear(hidden, hidden), 
+        nn.LeakyReLU(), 
+        nn.BatchNorm1d(hidden),
         nn.Linear(hidden, 3)
     ) 
 
 def get_finger_ik(n_joint=4, hidden=128):
     return nn.Sequential(
         nn.Linear(3, hidden), 
+        nn.LeakyReLU(), 
+        nn.BatchNorm1d(hidden),
+        nn.Linear(hidden, hidden), 
         nn.LeakyReLU(), 
         nn.BatchNorm1d(hidden),
         nn.Linear(hidden, hidden), 
